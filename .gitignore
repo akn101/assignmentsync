@@ -1,0 +1,29 @@
+# Environment variables
+.env
+.env.backup.*
+
+# Node modules
+node_modules/
+
+# Output files
+assignments.json
+assignments.csv
+assignments.xlsx
+notion_payload.json
+state.json
+
+# Organized output directories
+year/
+month/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Playwright
+test-results/
+playwright-report/

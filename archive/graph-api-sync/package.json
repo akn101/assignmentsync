@@ -1,0 +1,13 @@
+{
+  "name": "graph-api-assignment-sync",
+  "version": "1.0.0",
+  "description": "Microsoft Graph API assignment sync to Notion",
+  "main": "sync.mjs",
+  "type": "module",
+  "scripts": {
+    "start": "node sync.mjs"
+  },
+  "dependencies": {},
+  "author": "",
+  "license": "ISC"
+}

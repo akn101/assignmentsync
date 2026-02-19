@@ -1,0 +1,69 @@
+name: Sync Microsoft Teams Assignments
+
+on:
+  # Manual trigger
+  workflow_dispatch:
+    inputs:
+      sync_type:
+        description: 'Sync type'
+        required: true
+        default: 'incremental'
+        type: choice
+        options:
+        - full
+        - incremental
+  
+  # Scheduled runs (daily at 6 AM UTC)
+  schedule:
+    - cron: '0 6 * * *'
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm install xlsx
+    
+    - name: Run assignment sync
+      env:
+        AUI_URL: ${{ secrets.AUI_URL }}
+        AUI_TOKEN: ${{ secrets.AUI_TOKEN }}
+        AUI_SESSION_ID: ${{ secrets.AUI_SESSION_ID }}
+      run: |
+        SYNC_TYPE=${{ github.event.inputs.sync_type || 'incremental' }}
+        echo "Running sync with type: $SYNC_TYPE"
+        node sync-assignments.mjs --$SYNC_TYPE
+    
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: assignment-sync-${{ github.run_number }}
+        path: |
+          assignments.json
+          assignments.xlsx
+          notion_payload.json
+          state.json
+        retention-days: 30
+    
+    - name: Commit and push state (if changed)
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add state.json
+        if ! git diff --staged --quiet; then
+          git commit -m "Update sync state [skip ci]"
+          git push
+        else
+          echo "No state changes to commit"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
