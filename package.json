@@ -4,16 +4,16 @@
   "description": "Microsoft Teams Assignment Sync Tool",
   "main": "sync-assignments.mjs",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "setup": "bash setup.sh",
     "sync": "node sync-assignments.mjs",
     "sync:full": "node sync-assignments.mjs --full",
     "sync:incremental": "node sync-assignments.mjs --incremental",
     "sync:refresh": "node sync-assignments.mjs --refresh-tokens",
-    "extract-tokens": "node extract-tokens.js",
-    "launch-teams": "./launch-teams-debug.sh",
-    "setup": "npm install"
+    "extract-tokens": "node simple-edge-extractor.mjs",
+    "help": "node sync-assignments.mjs --help",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.2.4",

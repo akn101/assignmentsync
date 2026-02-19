@@ -62,6 +62,12 @@ class AssignmentSync {
 
     const argv = process.argv.slice(2);
     
+    // Check for help flag first
+    if (argv.includes('--help') || argv.includes('-h')) {
+      this.printHelp();
+      process.exit(0);
+    }
+    
     for (let i = 0; i < argv.length; i++) {
       const arg = argv[i];
       
@@ -163,6 +169,66 @@ class AssignmentSync {
 
     // If no match, just replace comma with space to avoid double dashes
     return name.replace(/,/g, ' ');
+  }
+
+  printHelp() {
+    console.log(`
+╔════════════════════════════════════════════════════════════╗
+║   AssignmentSync - Microsoft Teams Assignment Sync CLI     ║
+╚════════════════════════════════════════════════════════════╝
+
+USAGE:
+  node sync-assignments.mjs [FLAGS]
+
+FLAGS:
+  --help, -h                Show this help message
+  --full                    Sync all assignments (default)
+  --incremental             Only sync new assignments
+  --refresh-tokens          Refresh tokens before syncing
+  --status=<status>         Filter by status (can use multiple times)
+  --class-id=<uuid>         Filter by classroom ID (can use multiple times)
+  --due-before=<ISO-DATE>   Only assignments due before this date
+  --due-after=<ISO-DATE>    Only assignments due after this date
+  --incomplete              Only incomplete assignments
+  --overdue                 Only overdue assignments
+  --details=<classId>:<assignmentId>  Show detailed info for one assignment
+
+EXAMPLES:
+  # Sync all assignments
+  npm run sync
+
+  # Only sync incomplete assignments
+  node sync-assignments.mjs --incomplete
+
+  # Sync with a date filter
+  node sync-assignments.mjs --due-before=2025-12-31T23:59:59Z
+
+  # Combine multiple filters
+  node sync-assignments.mjs --incomplete --overdue --incremental
+
+  # Get details for a specific assignment
+  node sync-assignments.mjs --details=class-uuid:assignment-uuid
+
+ENVIRONMENT:
+  .env file should contain:
+    AUI_TOKEN=<bearer-token>
+    AUI_SESSION_ID=<session-id>
+    AUI_URL=https://assignments.onenote.com/api/v1.0/assignments
+
+  Setup tokens automatically:
+    npm run setup
+    npm run extract-tokens
+
+OUTPUT:
+  Generated files in outputs/:
+    - assignments.json, assignments.csv, assignments.xlsx
+    - by-year/YYYY/assignments.*
+    - by-month/YYYY/MM/assignments.*
+    - notion_payload.json (for Notion upload)
+    - state.json (tracks processed assignments)
+
+For more info, see README.md
+`);
   }
 
   validateToken(token) {
