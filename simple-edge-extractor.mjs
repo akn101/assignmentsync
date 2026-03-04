@@ -109,8 +109,17 @@ async function main() {
   const context = await chromium.launchPersistentContext(userDataDir, {
     headless: false,
     channel: 'msedge',
-    args: ['--remote-debugging-port=9222'],
+    args: [
+      '--disable-blink-features=AutomationControlled',
+      '--remote-debugging-port=9222',
+    ],
+    ignoreDefaultArgs: ['--enable-automation'],
     viewport: { width: 1280, height: 720 }
+  });
+
+  // Hide webdriver flag so Microsoft login doesn't detect automation
+  await context.addInitScript(() => {
+    Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
   });
 
   const page = await context.newPage();

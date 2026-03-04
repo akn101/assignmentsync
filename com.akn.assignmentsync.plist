@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.akn.assignmentsync</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Users/akn/.local/share/fnm/node-versions/v24.13.1/installation/bin/node</string>
+        <string>/Users/akn/dev/akn/eton/assignmentsync/sync-assignments.mjs</string>
+        <string>--incremental</string>
+        <string>--refresh-tokens</string>
+    </array>
+
+    <key>WorkingDirectory</key>
+    <string>/Users/akn/dev/akn/eton/assignmentsync</string>
+
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>6</integer>
+        <key>Minute</key>
+        <integer>0</integer>
+    </dict>
+
+    <key>StandardOutPath</key>
+    <string>/Users/akn/dev/akn/eton/assignmentsync/sync.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>/Users/akn/dev/akn/eton/assignmentsync/sync.log</string>
+
+    <key>RunAtLoad</key>
+    <false/>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>HOME</key>
+        <string>/Users/akn</string>
+        <key>PATH</key>
+        <string>/usr/local/bin:/usr/bin:/bin</string>
+    </dict>
+</dict>
+</plist>
