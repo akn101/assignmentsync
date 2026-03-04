@@ -16,7 +16,8 @@ console.log('🔧 Starting simple Edge token extractor...');
 const tokens = {
   AUI_TOKEN: null,
   AUI_SESSION_ID: null,
-  AUI_URL: null
+  AUI_URL: null,
+  AUI_REFRESH_TOKEN: null
 };
 
 let foundTokens = false;
@@ -76,7 +77,8 @@ function saveTokensImmediately() {
   const updates = [
     ['AUI_URL', sanitizeAuiUrl(tokens.AUI_URL)],
     ['AUI_TOKEN', tokens.AUI_TOKEN],
-    ['AUI_SESSION_ID', tokens.AUI_SESSION_ID]
+    ['AUI_SESSION_ID', tokens.AUI_SESSION_ID],
+    ['AUI_REFRESH_TOKEN', tokens.AUI_REFRESH_TOKEN]
   ];
 
   for (const [key, value] of updates) {
@@ -166,6 +168,21 @@ async function main() {
     }
   });
 
+  // Intercept Microsoft OAuth token responses to capture the refresh token
+  page.on('response', async (response) => {
+    const url = response.url();
+    if (url.includes('login.microsoftonline.com') && url.includes('/oauth2/v2.0/token')) {
+      try {
+        const body = await response.json();
+        if (body.refresh_token) {
+          tokens.AUI_REFRESH_TOKEN = body.refresh_token;
+          console.log('🔄 Captured refresh token!');
+          saveTokensImmediately();
+        }
+      } catch {}
+    }
+  });
+
   console.log('🧭 Navigating to Teams...');
   await page.goto('https://teams.microsoft.com/v2/');
 
@@ -246,7 +263,8 @@ async function main() {
   const updates = [
     ['AUI_URL', tokens.AUI_URL],
     ['AUI_TOKEN', tokens.AUI_TOKEN],
-    ['AUI_SESSION_ID', tokens.AUI_SESSION_ID]
+    ['AUI_SESSION_ID', tokens.AUI_SESSION_ID],
+    ['AUI_REFRESH_TOKEN', tokens.AUI_REFRESH_TOKEN]
   ];
 
   for (const [key, value] of updates) {
@@ -268,6 +286,7 @@ async function main() {
   console.log(`   URL: ${tokens.AUI_URL?.split('?')[0]}...`);
   console.log(`   Token: ${tokens.AUI_TOKEN?.substring(0, 30)}...`);
   console.log(`   Session: ${tokens.AUI_SESSION_ID}`);
+  console.log(`   Refresh token: ${tokens.AUI_REFRESH_TOKEN ? '✅ captured' : '⚠️  not captured (CI will require manual re-run)'}`);
 
   await context.close();
   console.log('🎉 Done!');

@@ -10,6 +10,7 @@
     "sync:incremental": "node sync-assignments.mjs --incremental",
     "sync:refresh": "node sync-assignments.mjs --refresh-tokens",
     "extract-tokens": "node simple-edge-extractor.mjs",
+    "refresh-token": "node refresh-token.mjs",
     "help": "node sync-assignments.mjs --help",
     "dev": "next dev",
     "build": "next build",

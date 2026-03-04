@@ -34,10 +34,14 @@ jobs:
     - name: Install dependencies
       run: npm install xlsx
     
+    - name: Refresh access token
+      env:
+        AUI_REFRESH_TOKEN: ${{ secrets.AUI_REFRESH_TOKEN }}
+      run: node refresh-token.mjs >> $GITHUB_ENV
+
     - name: Run assignment sync
       env:
         AUI_URL: ${{ secrets.AUI_URL }}
-        AUI_TOKEN: ${{ secrets.AUI_TOKEN }}
         AUI_SESSION_ID: ${{ secrets.AUI_SESSION_ID }}
         NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
         NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
