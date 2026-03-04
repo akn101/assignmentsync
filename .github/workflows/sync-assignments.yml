@@ -39,7 +39,7 @@ jobs:
         AUI_URL: ${{ secrets.AUI_URL }}
         AUI_TOKEN: ${{ secrets.AUI_TOKEN }}
         AUI_SESSION_ID: ${{ secrets.AUI_SESSION_ID }}
-        NOTION_API_TOKEN: ${{ secrets.NOTION_API_TOKEN }}
+        NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
         NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
       run: |
         SYNC_TYPE=${{ github.event.inputs.sync_type || 'incremental' }}
